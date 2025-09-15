@@ -877,3 +877,106 @@
       }, 2000);
     }
   </script>
+
+  <script>
+  // --- Simple analytics config ---
+  const TRACK_URL = 'https://script.google.com/macros/s/AKfycbwSNa2MsQtjBHQvcbfw_xlbZ0brhrK8GzXMtp_23mQNK1TUzN4ue4ukocLTs1aWy94n/exec'; // e.g., https://script.google.com/macros/s/XXX/exec
+
+  // Parse & persist UTM params
+  const urlParams = new URLSearchParams(window.location.search);
+  const utm = {
+    source: urlParams.get('utm_source') || localStorage.getItem('utm_source') || '(direct)',
+    medium: urlParams.get('utm_medium') || localStorage.getItem('utm_medium') || '(none)',
+    campaign: urlParams.get('utm_campaign') || localStorage.getItem('utm_campaign') || '(not set)',
+    term: urlParams.get('utm_term') || localStorage.getItem('utm_term') || '',
+    content: urlParams.get('utm_content') || localStorage.getItem('utm_content') || ''
+  };
+  Object.entries(utm).forEach(([k,v]) => localStorage.setItem(`utm_${k}`, v));
+
+  // Helper: send event to GAS (use sendBeacon where possible)
+  function sendEvent(name, payload = {}) {
+    const body = JSON.stringify({
+      event: name,
+      utm,
+      page: { path: location.pathname + location.search, referrer: document.referrer },
+      payload,
+      ts: new Date().toISOString()
+    });
+
+    try {
+      if (navigator.sendBeacon) {
+        const blob = new Blob([body], { type: 'application/json' });
+        navigator.sendBeacon(TRACK_URL, blob);
+      } else {
+        fetch(TRACK_URL, { method: 'POST', headers: {'Content-Type':'application/json'}, body });
+      }
+    } catch(e) { /* swallow */ }
+
+    // Optional: also push to dataLayer for GA4/GTM
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: name, ...payload, ...utm });
+  }
+
+  // Fire a page_view once
+  sendEvent('page_view');
+
+  // Track hero CTA clicks (button that scrolls to form)
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn-primary, .btn-secondary');
+    if (!btn) return;
+    const label = btn.classList.contains('btn-primary') ? 'Get Free Deal Alerts' : 'See Example Deals';
+    sendEvent('cta_click', { label });
+  });
+
+  // Hash emails for privacy (SHA-256)
+  async function hashEmail(email) {
+    const msgUint8 = new TextEncoder().encode(email.trim().toLowerCase());
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  // Hook into your existing handleSubmit
+  const originalHandleSubmit = window.handleSubmit;
+  window.handleSubmit = async function(event) {
+    event.preventDefault();
+
+    // Grab key fields for funnel analysis
+    const name = document.getElementById('name')?.value || '';
+    const email = document.getElementById('email')?.value || '';
+    const homeAirport = document.getElementById('homeAirport')?.value || '';
+    const destination = document.getElementById('destination')?.value || '';
+    const dates = document.getElementById('dates')?.value || '';
+    const budget = document.getElementById('budget')?.value || '';
+    const directOnly = document.getElementById('directOnly')?.checked || false;
+    const includeHotel = document.getElementById('includeHotel')?.checked || false;
+
+    // Basic validation (as you already had)
+    if (!name.trim() || !email.trim() || !email.includes('@')) {
+      alert('Please enter your name and a valid email address');
+      return;
+    }
+
+    // Disable button UI instantly
+    const submitBtn = event.target.querySelector('.form-submit');
+    submitBtn.textContent = 'Processing...';
+    submitBtn.disabled = true;
+
+    // Send signup event (email hashed)
+    const email_hash = await hashEmail(email);
+    sendEvent('signup', {
+      email_hash,
+      homeAirport, destination, dates, budget, directOnly, includeHotel
+    });
+
+    // Keep your success UI
+    setTimeout(function() {
+      event.target.style.display = 'none';
+      document.getElementById('successState').style.display = 'block';
+    }, 600); // faster feedback
+  };
+</script>
+
+
+</body>
+</html>
