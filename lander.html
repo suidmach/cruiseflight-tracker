@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CruiseAir Connect — Cruise + Flight Deals</title>
+  <meta name="description" content="Find the best bundled cruise + flight deals. Get alerts when bundles drop below your budget — direct flights, preferred dates, worldwide." />
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --accent:#06b6d4; --muted:#94a3b8; --glass: rgba(255,255,255,0.04);
+      --radius:14px; --maxw:920px;
+      --ff: 'Inter',system-ui,Segoe UI,Roboto,Helvetica,Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{font-family:var(--ff);margin:0;background:linear-gradient(180deg,#071023 0%, #081426 60%);color:#e6eef6;line-height:1.4;-webkit-font-smoothing:antialiased}
+    .wrap{max-width:var(--maxw);margin:32px auto;padding:18px}
+
+    /* Card / hero */
+    .hero{display:grid;grid-template-columns:1fr;gap:18px;align-items:center}
+    @media(min-width:860px){.hero{grid-template-columns:1fr 420px}}
+    .hero-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:20px;border-radius:18px;box-shadow:0 6px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.04)}
+    h1{margin:0 0 8px 0;font-size:28px}
+    p.lead{margin:0 0 14px;color:var(--muted)}
+
+    /* form */
+    .form{background:var(--card);padding:14px;border-radius:12px}
+    .field{display:flex;gap:8px;margin-bottom:10px}
+    .field input, .field select{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit;font-size:14px}
+    .field.small input{padding:10px;font-size:13px}
+    .cta{display:flex;gap:8px;align-items:center}
+    .btn{background:linear-gradient(90deg,var(--accent),#3b82f6);border:none;padding:12px 16px;border-radius:10px;color:#05202a;font-weight:700;cursor:pointer}
+    .ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px;border-radius:10px;color:var(--muted);cursor:pointer}
+
+    /* features */
+    .features{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+    @media(max-width:520px){.features{grid-template-columns:1fr}}
+    .feature{background:var(--glass);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
+    .feature h4{margin:0 0 6px 0;font-size:15px}
+    .feature p{margin:0;color:var(--muted);font-size:13px}
+
+    /* mockup */
+    .mockup{padding:14px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border:1px solid rgba(255,255,255,0.03)}
+    .mockup .card{background:linear-gradient(180deg,#071827, #062433);padding:12px;border-radius:12px}
+    .result-row{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;margin-bottom:8px;background:linear-gradient(90deg, rgba(255,255,255,0.01), transparent)}
+    .price{font-weight:800;font-size:18px}
+
+    /* footer */
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+
+    /* small */
+    .meta{font-size:13px;color:var(--muted);margin-top:8px}
+    .pill{background:rgba(255,255,255,0.03);padding:6px 8px;border-radius:999px;border:1px solid rgba(255,255,255,0.02);font-size:13px}
+
+    /* success */
+    .success{display:none;padding:12px;border-radius:10px;background:linear-gradient(90deg,#05202a,#021a1f);border:1px solid rgba(6,182,212,0.12);color:#baf7fb}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div class="hero-card">
+        <h1>Find cruise + flight bundles — without the headache</h1>
+        <p class="lead">Search worldwide cruise departures and the best matching flights. Filters for direct flights, baggage, arrival windows, and total budget. We’ll notify you when the perfect bundle drops under your price.</p>
+
+        <div class="form" id="signupBox">
+          <form id="leadForm">
+            <div class="field">
+              <input type="text" name="name" id="name" placeholder="Full name" required />
+              <input type="email" name="email" id="email" placeholder="Email address" required />
+            </div>
+
+            <div class="field small">
+              <select id="homeAirport" name="homeAirport" aria-label="Home airport">
+                <option value="">Home city / airport (e.g. YYZ)</option>
+                <option>YYZ - Toronto Pearson</option>
+                <option>JFK - New York</option>
+                <option>MIA - Miami</option>
+                <option>LAX - Los Angeles</option>
+                <option>Other</option>
+              </select>
+              <select id="destination" name="destination" aria-label="Destination">
+                <option value="">Destination (e.g. Caribbean)</option>
+                <option>Caribbean</option>
+                <option>Mediterranean</option>
+                <option>Baltic</option>
+                <option>Alaska</option>
+              </select>
+            </div>
+
+            <div class="field small">
+              <input type="text" id="dates" name="dates" placeholder="Preferred month / dates (e.g. Dec 2025)" />
+              <input type="number" id="budget" name="budget" placeholder="Max total budget (USD)" />
+            </div>
+
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+              <label class="pill"><input type="checkbox" id="directOnly" /> Direct flights only</label>
+              <label class="pill"><input type="checkbox" id="includeHotel" /> Include hotel (optional)</label>
+              <div style="flex:1"></div>
+              <button class="btn" type="submit">Get Early Access</button>
+            </div>
+
+            <div class="meta">No spam. We’ll only email you when we find matching deals or important updates.</div>
+          </form>
+
+          <div class="success" id="successBox">Thanks — you’re on the list! We’ll email you when matching bundles go on sale.</div>
+        </div>
+
+        <div class="features" aria-hidden="false">
+          <div class="feature"><h4>Direct flights only</h4><p>Toggle to only see nonstop options — handy when you don’t want long layovers.</p></div>
+          <div class="feature"><h4>Budget alerts</h4><p>Set a max total budget and we’ll notify you when flight+cruise+hotel (if chosen) fall below it.</p></div>
+          <div class="feature"><h4>Worldwide</h4><p>Search cruises departing from ports worldwide and match flights from your home airport.</p></div>
+          <div class="feature"><h4>Mobile-first</h4><p>Designed for travelers searching on the go. Alerts via email or push notifications.</p></div>
+        </div>
+
+      </div>
+
+      <aside class="mockup">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>
+            <div class="pill">Early access demo</div>
+            <div style="font-weight:800;font-size:20px;margin-top:8px">Example bundles we could track</div>
+            <div style="color:var(--muted);font-size:13px;margin-top:6px">These are mock results to show the format.</div>
+          </div>
+          <div style="text-align:right;color:var(--muted);font-size:12px">Secure • Affiliate partners</div>
+        </div>
+
+        <div class="card">
+          <div class="result-row">
+            <div>
+              <div style="font-size:14px;font-weight:700">7‑night Caribbean cruise • Balcony</div>
+              <div style="font-size:13px;color:var(--muted)">Departs PortMiami • Dec 12, 2025 • Royal Line</div>
+            </div>
+            <div style="text-align:right">
+              <div class="price">$3,299</div>
+              <div style="font-size:12px;color:var(--muted)">+ $650 flight (direct)</div>
+            </div>
+          </div>
+
+          <div class="result-row">
+            <div>
+              <div style="font-size:14px;font-weight:700">7‑night Eastern Caribbean • Interior</div>
+              <div style="font-size:13px;color:var(--muted)">Departs Fort Lauderdale • Dec 8, 2025 • Sunny Cruiselines</div>
+            </div>
+            <div style="text-align:right">
+              <div class="price">$1,999</div>
+              <div style="font-size:12px;color:var(--muted)">+ $420 flight (1 stop)</div>
+            </div>
+          </div>
+
+          <div class="result-row">
+            <div>
+              <div style="font-size:14px;font-weight:700">7‑night Western Caribbean • Balcony</div>
+              <div style="font-size:13px;color:var(--muted)">Departs PortMiami • Dec 19, 2025 • Wave Cruises</div>
+            </div>
+            <div style="text-align:right">
+              <div class="price">$2,650</div>
+              <div style="font-size:12px;color:var(--muted)">+ $480 nonstop flight</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="margin-top:12px;color:var(--muted);font-size:13px">Want a different mockup or copy? I can swap the design and wording to target budget vs convenience travelers.</div>
+      </aside>
+
+    </div>
+
+    <footer>
+      <div>&copy; <strong>CruiseAir Connect</strong> — Prototype landing page. Affiliate partners and terms apply.</div>
+    </footer>
+  </div>
+
+  <script>
+    // Basic form handling. Replace endpoint with your email provider (Mailchimp/ConvertKit/SendGrid) or server.
+    const form = document.getElementById('leadForm');
+    const successBox = document.getElementById('successBox');
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const homeAirport = document.getElementById('homeAirport').value;
+      const destination = document.getElementById('destination').value;
+      const dates = document.getElementById('dates').value;
+      const budget = document.getElementById('budget').value;
+      const directOnly = document.getElementById('directOnly').checked;
+      const includeHotel = document.getElementById('includeHotel').checked;
+
+      if(!email || !name){alert('Please enter name and email');return}
+
+      // Save locally so the user sees immediate feedback (and you can demo without a backend)
+      const lead = {name,email,homeAirport,destination,dates,budget,directOnly,includeHotel,ts:Date.now()};
+      const leads = JSON.parse(localStorage.getItem('ca_leads')||'[]');
+      leads.unshift(lead);
+      localStorage.setItem('ca_leads', JSON.stringify(leads));
+
+      // Show success message
+      form.style.display='none';
+      successBox.style.display='block';
+
+      // TODO: Replace with real API call to save leads
+      // await fetch('/api/leads', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(lead)});
+
+    });
+  </script>
+</body>
+</html>
+
+
+Done — I created a mobile-first, single-file HTML landing page in the canvas titled "CruiseAir Connect - Landing Page (HTML)". Open the document to view or download the HTML.
+
+Next steps I can do for you (pick one):
+• Hook the form to Mailchimp / ConvertKit (I’ll give the exact embed code).
+• Create a 2nd variant (targeting budget vs convenience) for A/B testing.
+• Produce a simple Google/Facebook ad copy + targeting plan to run the landing test.
+
+Which would you like first?
+
