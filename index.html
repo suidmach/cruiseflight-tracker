@@ -894,6 +894,7 @@
   Object.entries(utm).forEach(([k,v]) => localStorage.setItem(`utm_${k}`, v));
 
   // Helper: send event to GAS (use sendBeacon where possible)
+    
   function sendEvent(name, payload = {}) {
     const body = JSON.stringify({
       event: name,
@@ -903,19 +904,24 @@
       ts: new Date().toISOString()
     });
 
+    // 1) Try sendBeacon first (no CORS preflight)
     try {
       if (navigator.sendBeacon) {
-        const blob = new Blob([body], { type: 'application/json' });
+        const blob = new Blob([body], { type: 'text/plain;charset=utf-8' });
         navigator.sendBeacon(TRACK_URL, blob);
-      } else {
-        fetch(TRACK_URL, { method: 'POST', headers: {'Content-Type':'application/json'}, body });
+        return;
       }
-    } catch(e) { /* swallow */ }
+    } catch (e) {}
 
-    // Optional: also push to dataLayer for GA4/GTM
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ event: name, ...payload, ...utm });
+    // 2) Fallback to a "simple" POST: text/plain and no response handling
+    fetch(TRACK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body
+    }).catch(() => { /* ignore network errors */ });
   }
+
+
 
   // Fire a page_view once
   sendEvent('page_view');
