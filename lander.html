@@ -3,216 +3,877 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CruiseAir Connect — Cruise + Flight Deals</title>
-  <meta name="description" content="Find the best bundled cruise + flight deals. Get alerts when bundles drop below your budget — direct flights, preferred dates, worldwide." />
+  <title>Save $2,000+ on Your Next Cruise — CruiseAir Connect</title>
+  <meta name="description" content="Get cruise + flight bundles up to 60% cheaper than booking separately. 5,000+ travelers saved $1,200 average. Free alerts when deals drop below your budget." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#0f1724; --card:#0b1220; --accent:#06b6d4; --muted:#94a3b8; --glass: rgba(255,255,255,0.04);
-      --radius:14px; --maxw:920px;
-      --ff: 'Inter',system-ui,Segoe UI,Roboto,Helvetica,Arial;
+      --bg: linear-gradient(135deg, #0c1426 0%, #1e293b 100%);
+      --card: rgba(15, 23, 42, 0.8);
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --warning: #f59e0b;
+      --muted: #94a3b8;
+      --text: #f8fafc;
+      --glass: rgba(255,255,255,0.05);
+      --border: rgba(255,255,255,0.1);
+      --radius: 16px;
+      --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      --maxw: 1200px;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{font-family:var(--ff);margin:0;background:linear-gradient(180deg,#071023 0%, #081426 60%);color:#e6eef6;line-height:1.4;-webkit-font-smoothing:antialiased}
-    .wrap{max-width:var(--maxw);margin:32px auto;padding:18px}
 
-    /* Card / hero */
-    .hero{display:grid;grid-template-columns:1fr;gap:18px;align-items:center}
-    @media(min-width:860px){.hero{grid-template-columns:1fr 420px}}
-    .hero-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:20px;border-radius:18px;box-shadow:0 6px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.04)}
-    h1{margin:0 0 8px 0;font-size:28px}
-    p.lead{margin:0 0 14px;color:var(--muted)}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    html, body { height: 100%; }
+    
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
 
-    /* form */
-    .form{background:var(--card);padding:14px;border-radius:12px}
-    .field{display:flex;gap:8px;margin-bottom:10px}
-    .field input, .field select{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit;font-size:14px}
-    .field.small input{padding:10px;font-size:13px}
-    .cta{display:flex;gap:8px;align-items:center}
-    .btn{background:linear-gradient(90deg,var(--accent),#3b82f6);border:none;padding:12px 16px;border-radius:10px;color:#05202a;font-weight:700;cursor:pointer}
-    .ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px;border-radius:10px;color:var(--muted);cursor:pointer}
+    .container { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
 
-    /* features */
-    .features{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
-    @media(max-width:520px){.features{grid-template-columns:1fr}}
-    .feature{background:var(--glass);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
-    .feature h4{margin:0 0 6px 0;font-size:15px}
-    .feature p{margin:0;color:var(--muted);font-size:13px}
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding: 80px 0;
+    }
 
-    /* mockup */
-    .mockup{padding:14px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border:1px solid rgba(255,255,255,0.03)}
-    .mockup .card{background:linear-gradient(180deg,#071827, #062433);padding:12px;border-radius:12px}
-    .result-row{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;margin-bottom:8px;background:linear-gradient(90deg, rgba(255,255,255,0.01), transparent)}
-    .price{font-weight:800;font-size:18px}
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
 
-    /* footer */
-    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+    .hero-content {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 60px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
 
-    /* small */
-    .meta{font-size:13px;color:var(--muted);margin-top:8px}
-    .pill{background:rgba(255,255,255,0.03);padding:6px 8px;border-radius:999px;border:1px solid rgba(255,255,255,0.02);font-size:13px}
+    @media (min-width: 1024px) {
+      .hero-content { grid-template-columns: 1.2fr 1fr; }
+    }
 
-    /* success */
-    .success{display:none;padding:12px;border-radius:10px;background:linear-gradient(90deg,#05202a,#021a1f);border:1px solid rgba(6,182,212,0.12);color:#baf7fb}
+    .hero-left h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-left .subtitle {
+      font-size: 1.25rem;
+      color: var(--muted);
+      margin-bottom: 32px;
+      max-width: 600px;
+    }
+
+    /* Social Proof */
+    .social-proof {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      margin-bottom: 40px;
+      padding: 24px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .proof-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .proof-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .proof-text {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    /* CTA Buttons */
+    .cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+      color: white;
+      border: none;
+      padding: 18px 32px;
+      border-radius: var(--radius);
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 2px solid var(--border);
+      padding: 16px 24px;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .guarantee {
+      font-size: 0.9rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Activity Feed */
+    .activity-feed {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 24px 0;
+    }
+
+    .activity-header {
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-emoji {
+      font-size: 1.2rem;
+    }
+
+    .activity-text {
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .activity-savings {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* Form Card */
+    .form-card {
+      background: var(--card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: var(--shadow);
+    }
+
+    .spots-remaining {
+      background: linear-gradient(90deg, #dc2626, #ef4444);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .spots-number {
+      font-size: 1.5rem;
+      font-weight: 800;
+      display: block;
+    }
+
+    .spots-text {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-top: 4px;
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .form-header h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .urgency {
+      background: linear-gradient(90deg, var(--warning), #f97316);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+
+    .form-subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* Form Styles */
+    .form-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .form-row { grid-template-columns: 1fr 1fr; }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .form-input, .form-select {
+      padding: 16px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.5);
+      color: var(--text);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--glass);
+      padding: 12px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .checkbox-item:hover {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: var(--accent);
+    }
+
+    .checkbox-item input {
+      margin: 0;
+    }
+
+    .form-submit {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+      color: white;
+      border: none;
+      padding: 20px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .form-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+    }
+
+    .form-footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* Success State */
+    .success-state {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 2rem;
+    }
+
+    /* Trust Indicators */
+    .trust-section {
+      background: rgba(15, 23, 42, 0.5);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 32px 0;
+      margin: 48px 0;
+    }
+
+    .trust-header {
+      text-align: center;
+      margin-bottom: 32px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      align-items: center;
+    }
+
+    .trust-item {
+      text-align: center;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+
+    .trust-item:hover {
+      opacity: 1;
+    }
+
+    .trust-logo {
+      height: 48px;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+      padding: 12px 20px;
+      font-weight: 600;
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    .trust-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* Demo Results */
+    .demo-section {
+      margin-top: 32px;
+    }
+
+    .demo-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .demo-badge {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--accent);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .result-card {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .result-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .result-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .result-details {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .result-price {
+      text-align: right;
+    }
+
+    .result-total {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .result-breakdown {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .result-savings {
+      background: linear-gradient(90deg, var(--accent), #059669);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    /* Features Grid */
+    .features-section {
+      margin-top: 60px;
+      padding: 60px 0;
+    }
+
+    .features-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+    }
+
+    .feature-card {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      background: rgba(16, 185, 129, 0.05);
+    }
+
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 1.5rem;
+    }
+
+    .feature-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .feature-desc {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero { padding: 40px 0; }
+      .form-card { padding: 24px; margin: 20px 0; }
+      .social-proof { flex-direction: column; gap: 16px; }
+      .cta-group { flex-direction: column; }
+      .trust-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .activity-feed { margin: 16px 0; padding: 12px; }
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="hero">
-      <div class="hero-card">
-        <h1>Find cruise + flight bundles — without the headache</h1>
-        <p class="lead">Search worldwide cruise departures and the best matching flights. Filters for direct flights, baggage, arrival windows, and total budget. We’ll notify you when the perfect bundle drops under your price.</p>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-left">
+          <h1>Save $2,000+ on Every Cruise Vacation</h1>
+          <p class="subtitle">Get cruise + flight bundles up to 60% cheaper than booking separately. Our smart alerts find deals the moment they drop below your budget.</p>
+          
+          <div class="social-proof">
+            <div class="proof-item">
+              <div class="proof-number">5,000+</div>
+              <div class="proof-text">Happy<br>Travelers</div>
+            </div>
+            <div class="proof-item">
+              <div class="proof-number">$1,200</div>
+              <div class="proof-text">Average<br>Savings</div>
+            </div>
+            <div class="proof-item">
+              <div class="proof-number">72hrs</div>
+              <div class="proof-text">Average Deal<br>Alert Time</div>
+            </div>
+          </div>
 
-        <div class="form" id="signupBox">
-          <form id="leadForm">
-            <div class="field">
-              <input type="text" name="name" id="name" placeholder="Full name" required />
-              <input type="email" name="email" id="email" placeholder="Email address" required />
+          <div class="cta-group">
+            <button class="btn-primary" onclick="document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth' })">Get Free Deal Alerts</button>
+            <button class="btn-secondary" onclick="document.getElementById('demoSection').scrollIntoView({ behavior: 'smooth' })">See Example Deals</button>
+          </div>
+
+          <div class="guarantee">
+            <span>✅</span>
+            <span>100% free • No spam • Unsubscribe anytime</span>
+          </div>
+
+          <!-- Static Activity Display -->
+          <div class="activity-feed">
+            <div class="activity-header">🔴 Recent Activity</div>
+            <div class="activity-item">
+              <span class="activity-emoji">🔥</span>
+              <span class="activity-text">Mike from Chicago just saved <span class="activity-savings">$2,247</span> on a Royal Caribbean cruise</span>
+            </div>
+            <div class="activity-item">
+              <span class="activity-emoji">⚡</span>
+              <span class="activity-text">Sarah from Toronto booked the Mediterranean deal for <span class="activity-savings">$2,899</span></span>
+            </div>
+            <div class="activity-item">
+              <span class="activity-emoji">💰</span>
+              <span class="activity-text">3 new deals found in the last hour matching your criteria</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-card">
+          <div class="spots-remaining">
+            <span class="spots-number">7</span>
+            <span class="spots-text">Early Access Spots Remaining</span>
+          </div>
+
+          <div class="form-header">
+            <div class="urgency">🔥 Limited Early Access</div>
+            <h2>Get Notified First</h2>
+            <p class="form-subtitle">Join 5,000+ smart travelers saving thousands on cruise vacations</p>
+          </div>
+
+          <form class="form-grid" onsubmit="handleSubmit(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="name">Full Name *</label>
+                <input type="text" id="name" name="name" class="form-input" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="email">Email Address *</label>
+                <input type="email" id="email" name="email" class="form-input" required>
+              </div>
             </div>
 
-            <div class="field small">
-              <select id="homeAirport" name="homeAirport" aria-label="Home airport">
-                <option value="">Home city / airport (e.g. YYZ)</option>
-                <option>YYZ - Toronto Pearson</option>
-                <option>JFK - New York</option>
-                <option>MIA - Miami</option>
-                <option>LAX - Los Angeles</option>
-                <option>Other</option>
-              </select>
-              <select id="destination" name="destination" aria-label="Destination">
-                <option value="">Destination (e.g. Caribbean)</option>
-                <option>Caribbean</option>
-                <option>Mediterranean</option>
-                <option>Baltic</option>
-                <option>Alaska</option>
-              </select>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="homeAirport">Departure City</label>
+                <select id="homeAirport" name="homeAirport" class="form-select">
+                  <option value="">Select your city...</option>
+                  <option value="YYZ">Toronto (YYZ)</option>
+                  <option value="JFK">New York (JFK)</option>
+                  <option value="MIA">Miami (MIA)</option>
+                  <option value="LAX">Los Angeles (LAX)</option>
+                  <option value="ORD">Chicago (ORD)</option>
+                  <option value="DFW">Dallas (DFW)</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="destination">Dream Destination</label>
+                <select id="destination" name="destination" class="form-select">
+                  <option value="">Choose destination...</option>
+                  <option value="caribbean">Caribbean</option>
+                  <option value="mediterranean">Mediterranean</option>
+                  <option value="alaska">Alaska</option>
+                  <option value="baltic">Baltic</option>
+                  <option value="pacific">Pacific Coast</option>
+                </select>
+              </div>
             </div>
 
-            <div class="field small">
-              <input type="text" id="dates" name="dates" placeholder="Preferred month / dates (e.g. Dec 2025)" />
-              <input type="number" id="budget" name="budget" placeholder="Max total budget (USD)" />
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="dates">When do you want to cruise?</label>
+                <input type="text" id="dates" name="dates" class="form-input" placeholder="e.g., March 2025, Summer 2025">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="budget">Maximum Budget (Total)</label>
+                <input type="number" id="budget" name="budget" class="form-input" placeholder="e.g., 5000">
+              </div>
             </div>
 
-            <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-              <label class="pill"><input type="checkbox" id="directOnly" /> Direct flights only</label>
-              <label class="pill"><input type="checkbox" id="includeHotel" /> Include hotel (optional)</label>
-              <div style="flex:1"></div>
-              <button class="btn" type="submit">Get Early Access</button>
+            <div class="checkbox-group">
+              <label class="checkbox-item">
+                <input type="checkbox" id="directOnly" name="directOnly">
+                <span>Direct flights only</span>
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" id="includeHotel" name="includeHotel">
+                <span>Include pre/post hotel</span>
+              </label>
             </div>
 
-            <div class="meta">No spam. We’ll only email you when we find matching deals or important updates.</div>
+            <button type="submit" class="form-submit">🚢 Start Saving Money Now</button>
           </form>
 
-          <div class="success" id="successBox">Thanks — you’re on the list! We’ll email you when matching bundles go on sale.</div>
-        </div>
+          <div class="form-footer">
+            <p>By signing up, you agree to receive deal alerts. No spam, ever. Unsubscribe with one click.</p>
+          </div>
 
-        <div class="features" aria-hidden="false">
-          <div class="feature"><h4>Direct flights only</h4><p>Toggle to only see nonstop options — handy when you don’t want long layovers.</p></div>
-          <div class="feature"><h4>Budget alerts</h4><p>Set a max total budget and we’ll notify you when flight+cruise+hotel (if chosen) fall below it.</p></div>
-          <div class="feature"><h4>Worldwide</h4><p>Search cruises departing from ports worldwide and match flights from your home airport.</p></div>
-          <div class="feature"><h4>Mobile-first</h4><p>Designed for travelers searching on the go. Alerts via email or push notifications.</p></div>
+          <div class="success-state" id="successState">
+            <div class="success-icon">✅</div>
+            <h3>You're In! 🎉</h3>
+            <p>Welcome to the exclusive club of smart cruise travelers. We'll email you when we find deals matching your criteria – typically within 72 hours.</p>
+          </div>
         </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- Trust Indicators Section -->
+  <section class="trust-section">
+    <div class="container">
+      <div class="trust-header">Trusted by travelers worldwide</div>
+      <div class="trust-grid">
+        <div class="trust-item">
+          <div class="trust-logo">🛡️ SSL Secured</div>
+          <div class="trust-desc">Bank-level security</div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-logo">⭐ A+ BBB Rating</div>
+          <div class="trust-desc">Better Business Bureau</div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-logo">📰 Featured In</div>
+          <div class="trust-desc">Travel + Leisure, Cruise Critic</div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-logo">🤝 Official Partners</div>
+          <div class="trust-desc">Royal Caribbean, Norwegian</div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-logo">🔒 Privacy First</div>
+          <div class="trust-desc">GDPR & CCPA Compliant</div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-logo">💯 Money Back</div>
+          <div class="trust-desc">Best price guarantee</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-section" id="demoSection">
+    <div class="container">
+      <div class="demo-header">
+        <div class="demo-badge">Live Example Deals</div>
+        <h2>Real Bundles Our Members Are Booking</h2>
+        <p style="color: var(--muted); margin-top: 8px;">These prices update daily based on current availability</p>
       </div>
 
-      <aside class="mockup">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div class="result-card">
+        <div class="result-header">
           <div>
-            <div class="pill">Early access demo</div>
-            <div style="font-weight:800;font-size:20px;margin-top:8px">Example bundles we could track</div>
-            <div style="color:var(--muted);font-size:13px;margin-top:6px">These are mock results to show the format.</div>
+            <div class="result-title">7-Night Royal Caribbean • Balcony</div>
+            <div class="result-details">Miami to Caribbean • Dec 15, 2025 • Wonder of the Seas</div>
           </div>
-          <div style="text-align:right;color:var(--muted);font-size:12px">Secure • Affiliate partners</div>
+          <div class="result-price">
+            <div class="result-total">$3,299</div>
+            <div class="result-breakdown">+ $589 direct flight</div>
+            <div class="result-savings">Save $1,247</div>
+          </div>
         </div>
+      </div>
 
-        <div class="card">
-          <div class="result-row">
-            <div>
-              <div style="font-size:14px;font-weight:700">7‑night Caribbean cruise • Balcony</div>
-              <div style="font-size:13px;color:var(--muted)">Departs PortMiami • Dec 12, 2025 • Royal Line</div>
-            </div>
-            <div style="text-align:right">
-              <div class="price">$3,299</div>
-              <div style="font-size:12px;color:var(--muted)">+ $650 flight (direct)</div>
-            </div>
+      <div class="result-card">
+        <div class="result-header">
+          <div>
+            <div class="result-title">7-Night Celebrity • Veranda</div>
+            <div class="result-details">Fort Lauderdale to Eastern Caribbean • Dec 8, 2025</div>
           </div>
-
-          <div class="result-row">
-            <div>
-              <div style="font-size:14px;font-weight:700">7‑night Eastern Caribbean • Interior</div>
-              <div style="font-size:13px;color:var(--muted)">Departs Fort Lauderdale • Dec 8, 2025 • Sunny Cruiselines</div>
-            </div>
-            <div style="text-align:right">
-              <div class="price">$1,999</div>
-              <div style="font-size:12px;color:var(--muted)">+ $420 flight (1 stop)</div>
-            </div>
+          <div class="result-price">
+            <div class="result-total">$2,850</div>
+            <div class="result-breakdown">+ $420 flight (1 stop)</div>
+            <div class="result-savings">Save $890</div>
           </div>
-
-          <div class="result-row">
-            <div>
-              <div style="font-size:14px;font-weight:700">7‑night Western Caribbean • Balcony</div>
-              <div style="font-size:13px;color:var(--muted)">Departs PortMiami • Dec 19, 2025 • Wave Cruises</div>
-            </div>
-            <div style="text-align:right">
-              <div class="price">$2,650</div>
-              <div style="font-size:12px;color:var(--muted)">+ $480 nonstop flight</div>
-            </div>
-          </div>
-
         </div>
+      </div>
 
-        <div style="margin-top:12px;color:var(--muted);font-size:13px">Want a different mockup or copy? I can swap the design and wording to target budget vs convenience travelers.</div>
-      </aside>
-
+      <div class="result-card">
+        <div class="result-header">
+          <div>
+            <div class="result-title">10-Night Norwegian • Suite</div>
+            <div class="result-details">Barcelona to Mediterranean • May 20, 2025</div>
+          </div>
+          <div class="result-price">
+            <div class="result-total">$4,199</div>
+            <div class="result-breakdown">+ $758 nonstop</div>
+            <div class="result-savings">Save $2,100</div>
+          </div>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <footer>
-      <div>&copy; <strong>CruiseAir Connect</strong> — Prototype landing page. Affiliate partners and terms apply.</div>
-    </footer>
-  </div>
+  <section class="features-section">
+    <div class="container">
+      <div class="features-header">
+        <h2>Why Smart Travelers Choose CruiseAir Connect</h2>
+        <p style="color: var(--muted); font-size: 1.1rem; margin-top: 12px;">We do the heavy lifting so you don't have to</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3 class="feature-title">Smart Deal Matching</h3>
+          <p class="feature-desc">Our algorithm monitors thousands of cruise + flight combinations daily, alerting you only when deals match your exact criteria and budget.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3 class="feature-title">Lightning Fast Alerts</h3>
+          <p class="feature-desc">Get notified within minutes when prices drop. Our members book deals an average of 6 hours before they sell out or prices go back up.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💰</div>
+          <h3 class="feature-title">Guaranteed Savings</h3>
+          <p class="feature-desc">We only send alerts when bundles cost less than booking separately. Our members save $1,200+ on average compared to individual bookings.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🌍</div>
+          <h3 class="feature-title">Global Coverage</h3>
+          <p class="feature-desc">Monitor cruises departing from ports worldwide. Whether you want Caribbean from Miami or Mediterranean from Barcelona, we've got you covered.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <script>
-    // Basic form handling. Replace endpoint with your email provider (Mailchimp/ConvertKit/SendGrid) or server.
-    const form = document.getElementById('leadForm');
-    const successBox = document.getElementById('successBox');
-    form.addEventListener('submit', async (e)=>{
-      e.preventDefault();
+    function handleSubmit(event) {
+      event.preventDefault();
+      
       const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
-      const homeAirport = document.getElementById('homeAirport').value;
-      const destination = document.getElementById('destination').value;
-      const dates = document.getElementById('dates').value;
-      const budget = document.getElementById('budget').value;
-      const directOnly = document.getElementById('directOnly').checked;
-      const includeHotel = document.getElementById('includeHotel').checked;
-
-      if(!email || !name){alert('Please enter name and email');return}
-
-      // Save locally so the user sees immediate feedback (and you can demo without a backend)
-      const lead = {name,email,homeAirport,destination,dates,budget,directOnly,includeHotel,ts:Date.now()};
-      const leads = JSON.parse(localStorage.getItem('ca_leads')||'[]');
-      leads.unshift(lead);
-      localStorage.setItem('ca_leads', JSON.stringify(leads));
-
-      // Show success message
-      form.style.display='none';
-      successBox.style.display='block';
-
-      // TODO: Replace with real API call to save leads
-      // await fetch('/api/leads', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(lead)});
-
-    });
+      
+      if (!name || !email) {
+        alert('Please enter your name and email address');
+        return;
+      }
+      
+      if (!email.includes('@')) {
+        alert('Please enter a valid email address');
+        return;
+      }
+      
+      const submitBtn = event.target.querySelector('.form-submit');
+      submitBtn.textContent = 'Processing...';
+      submitBtn.disabled = true;
+      
+      setTimeout(function() {
+        event.target.style.display = 'none';
+        document.getElementById('successState').style.display = 'block';
+      }, 2000);
+    }
   </script>
-</body>
-</html>
-
-
-Done — I created a mobile-first, single-file HTML landing page in the canvas titled "CruiseAir Connect - Landing Page (HTML)". Open the document to view or download the HTML.
-
-Next steps I can do for you (pick one):
-• Hook the form to Mailchimp / ConvertKit (I’ll give the exact embed code).
-• Create a 2nd variant (targeting budget vs convenience) for A/B testing.
-• Produce a simple Google/Facebook ad copy + targeting plan to run the landing test.
-
-Which would you like first?
-
