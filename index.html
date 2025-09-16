@@ -831,7 +831,7 @@
 
         <div class="feature-card">
           <div class="feature-icon">⚡</div>
-          <h3 class="feature-title">Lightning Fast Alerts</h3>
+<h3 class="feature-title">Lightning Fast Alerts</h3>
           <p class="feature-desc">Get notified within minutes when prices drop. Our members book deals an average of 6 hours before they sell out or prices go back up.</p>
         </div>
 
@@ -851,138 +851,118 @@
   </section>
 
   <script>
-    function handleSubmit(event) {
+    // --- Analytics configuration ---
+    const TRACK_URL = 'https://script.google.com/macros/s/AKfycbwSNa2MsQtjBHQvcbfw_xlbZ0brhrK8GzXMtp_23mQNK1TUzN4ue4ukocLTs1aWy94n/exec';
+
+    // Parse & persist UTM params
+    const urlParams = new URLSearchParams(window.location.search);
+    const utm = {
+      source: urlParams.get('utm_source') || localStorage.getItem('utm_source') || '(direct)',
+      medium: urlParams.get('utm_medium') || localStorage.getItem('utm_medium') || '(none)',
+      campaign: urlParams.get('utm_campaign') || localStorage.getItem('utm_campaign') || '(not set)',
+      term: urlParams.get('utm_term') || localStorage.getItem('utm_term') || '',
+      content: urlParams.get('utm_content') || localStorage.getItem('utm_content') || ''
+    };
+    Object.entries(utm).forEach(([k,v]) => localStorage.setItem(`utm_${k}`, v));
+
+    // Helper: send event to Google Apps Script
+    function sendEvent(name, payload = {}) {
+      const body = JSON.stringify({
+        event: name,
+        utm,
+        page: { path: location.pathname + location.search, referrer: document.referrer },
+        payload,
+        ts: new Date().toISOString()
+      });
+
+      // Try sendBeacon first (no CORS preflight)
+      try {
+        if (navigator.sendBeacon) {
+          const blob = new Blob([body], { type: 'text/plain;charset=utf-8' });
+          navigator.sendBeacon(TRACK_URL, blob);
+          return;
+        }
+      } catch (e) {
+        console.log('sendBeacon failed, trying fetch');
+      }
+
+      // Fallback to fetch with text/plain
+      fetch(TRACK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body
+      }).catch(() => { 
+        console.log('Analytics request failed - this is normal for testing');
+      });
+    }
+
+    // Fire page view event
+    sendEvent('page_view');
+
+    // Track CTA clicks
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-primary, .btn-secondary');
+      if (!btn) return;
+      const label = btn.classList.contains('btn-primary') ? 'Get Free Deal Alerts' : 'See Example Deals';
+      sendEvent('cta_click', { label });
+    });
+
+    // Hash emails for privacy (SHA-256)
+    async function hashEmail(email) {
+      const msgUint8 = new TextEncoder().encode(email.trim().toLowerCase());
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Form submission handler
+    async function handleSubmit(event) {
       event.preventDefault();
-      
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      
-      if (!name || !email) {
-        alert('Please enter your name and email address');
+
+      // Get form data
+      const name = document.getElementById('name')?.value || '';
+      const email = document.getElementById('email')?.value || '';
+      const homeAirport = document.getElementById('homeAirport')?.value || '';
+      const destination = document.getElementById('destination')?.value || '';
+      const dates = document.getElementById('dates')?.value || '';
+      const budget = document.getElementById('budget')?.value || '';
+      const directOnly = document.getElementById('directOnly')?.checked || false;
+      const includeHotel = document.getElementById('includeHotel')?.checked || false;
+
+      // Validation
+      if (!name.trim() || !email.trim() || !email.includes('@')) {
+        alert('Please enter your name and a valid email address');
         return;
       }
-      
-      if (!email.includes('@')) {
-        alert('Please enter a valid email address');
-        return;
-      }
-      
+
+      // Update button state
       const submitBtn = event.target.querySelector('.form-submit');
       submitBtn.textContent = 'Processing...';
       submitBtn.disabled = true;
-      
+
+      // Send analytics event
+      try {
+        const email_hash = await hashEmail(email);
+        sendEvent('signup', {
+          email_hash,
+          homeAirport, 
+          destination, 
+          dates, 
+          budget, 
+          directOnly, 
+          includeHotel
+        });
+      } catch (error) {
+        console.log('Analytics error:', error);
+      }
+
+      // Show success state
       setTimeout(function() {
         event.target.style.display = 'none';
         document.getElementById('successState').style.display = 'block';
-      }, 2000);
+      }, 600);
     }
   </script>
-
-  <script>
-  // --- Simple analytics config ---
-  const TRACK_URL = 'https://script.google.com/macros/s/AKfycbwSNa2MsQtjBHQvcbfw_xlbZ0brhrK8GzXMtp_23mQNK1TUzN4ue4ukocLTs1aWy94n/exec'; // e.g., https://script.google.com/macros/s/XXX/exec
-
-  // Parse & persist UTM params
-  const urlParams = new URLSearchParams(window.location.search);
-  const utm = {
-    source: urlParams.get('utm_source') || localStorage.getItem('utm_source') || '(direct)',
-    medium: urlParams.get('utm_medium') || localStorage.getItem('utm_medium') || '(none)',
-    campaign: urlParams.get('utm_campaign') || localStorage.getItem('utm_campaign') || '(not set)',
-    term: urlParams.get('utm_term') || localStorage.getItem('utm_term') || '',
-    content: urlParams.get('utm_content') || localStorage.getItem('utm_content') || ''
-  };
-  Object.entries(utm).forEach(([k,v]) => localStorage.setItem(`utm_${k}`, v));
-
-  // Helper: send event to GAS (use sendBeacon where possible)
-    
-  function sendEvent(name, payload = {}) {
-    const body = JSON.stringify({
-      event: name,
-      utm,
-      page: { path: location.pathname + location.search, referrer: document.referrer },
-      payload,
-      ts: new Date().toISOString()
-    });
-
-    // 1) Try sendBeacon first (no CORS preflight)
-    try {
-      if (navigator.sendBeacon) {
-        const blob = new Blob([body], { type: 'text/plain;charset=utf-8' });
-        navigator.sendBeacon(TRACK_URL, blob);
-        return;
-      }
-    } catch (e) {}
-
-    // 2) Fallback to a "simple" POST: text/plain and no response handling
-    fetch(TRACK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body
-    }).catch(() => { /* ignore network errors */ });
-  }
-
-
-
-  // Fire a page_view once
-  sendEvent('page_view');
-
-  // Track hero CTA clicks (button that scrolls to form)
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.btn-primary, .btn-secondary');
-    if (!btn) return;
-    const label = btn.classList.contains('btn-primary') ? 'Get Free Deal Alerts' : 'See Example Deals';
-    sendEvent('cta_click', { label });
-  });
-
-  // Hash emails for privacy (SHA-256)
-  async function hashEmail(email) {
-    const msgUint8 = new TextEncoder().encode(email.trim().toLowerCase());
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  }
-
-  // Hook into your existing handleSubmit
-  const originalHandleSubmit = window.handleSubmit;
-  window.handleSubmit = async function(event) {
-    event.preventDefault();
-
-    // Grab key fields for funnel analysis
-    const name = document.getElementById('name')?.value || '';
-    const email = document.getElementById('email')?.value || '';
-    const homeAirport = document.getElementById('homeAirport')?.value || '';
-    const destination = document.getElementById('destination')?.value || '';
-    const dates = document.getElementById('dates')?.value || '';
-    const budget = document.getElementById('budget')?.value || '';
-    const directOnly = document.getElementById('directOnly')?.checked || false;
-    const includeHotel = document.getElementById('includeHotel')?.checked || false;
-
-    // Basic validation (as you already had)
-    if (!name.trim() || !email.trim() || !email.includes('@')) {
-      alert('Please enter your name and a valid email address');
-      return;
-    }
-
-    // Disable button UI instantly
-    const submitBtn = event.target.querySelector('.form-submit');
-    submitBtn.textContent = 'Processing...';
-    submitBtn.disabled = true;
-
-    // Send signup event (email hashed)
-    const email_hash = await hashEmail(email);
-    sendEvent('signup', {
-      email_hash,
-      homeAirport, destination, dates, budget, directOnly, includeHotel
-    });
-
-    // Keep your success UI
-    setTimeout(function() {
-      event.target.style.display = 'none';
-      document.getElementById('successState').style.display = 'block';
-    }, 600); // faster feedback
-  };
-</script>
-
 
 </body>
 </html>
